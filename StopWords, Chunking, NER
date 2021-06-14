@@ -1,0 +1,286 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "NLP_Worsksheet2",
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "vV94q-_-u8rC"
+      },
+      "source": [
+        "##Stop-Words"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "yWS6UFUpuMqB",
+        "outputId": "a9a8db0b-4383-43be-b242-47ced8f02a35"
+      },
+      "source": [
+        "import nltk\n",
+        "nltk.download('stopwords')\n",
+        "nltk.download('wordnet')\n",
+        "nltk.download('punkt')\n",
+        "nltk.download('averaged_perceptron_tagger') "
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "[nltk_data] Downloading package stopwords to /root/nltk_data...\n",
+            "[nltk_data]   Package stopwords is already up-to-date!\n",
+            "[nltk_data] Downloading package wordnet to /root/nltk_data...\n",
+            "[nltk_data]   Unzipping corpora/wordnet.zip.\n",
+            "[nltk_data] Downloading package punkt to /root/nltk_data...\n",
+            "[nltk_data]   Unzipping tokenizers/punkt.zip.\n",
+            "[nltk_data] Downloading package averaged_perceptron_tagger to\n",
+            "[nltk_data]     /root/nltk_data...\n",
+            "[nltk_data]   Unzipping taggers/averaged_perceptron_tagger.zip.\n"
+          ],
+          "name": "stdout"
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "True"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 10
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "KIrQ5KwktUn6"
+      },
+      "source": [
+        "from nltk.corpus import stopwords\n",
+        "from nltk.tokenize import word_tokenize"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "bJlgJg6Kt2AY",
+        "outputId": "299e7db9-03e2-49a1-c37b-f999a3443c0d"
+      },
+      "source": [
+        "example_sent = \"This is a sample sentence, showing off the stop words filtration.\"\n",
+        "stop_words = set(stopwords.words('english'))\n",
+        "word_tokens = word_tokenize(example_sent)\n",
+        "filtered_sentence = [w for w in word_tokens if not w in stop_words]\n",
+        "filtered_sentence = []\n",
+        "\n",
+        "for w in word_tokens:\n",
+        "  if w not in stop_words:\n",
+        "    filtered_sentence.append(w)\n",
+        "\n",
+        "print(word_tokens)\n",
+        "print(filtered_sentence)"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "['This', 'is', 'a', 'sample', 'sentence', ',', 'showing', 'off', 'the', 'stop', 'words', 'filtration', '.']\n",
+            "['This', 'sample', 'sentence', ',', 'showing', 'stop', 'words', 'filtration', '.']\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "XPIt4N9Qu_DS"
+      },
+      "source": [
+        "##Chuncking"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "BlN3j3NrvRgn"
+      },
+      "source": [
+        "import nltk\n",
+        "from nltk.corpus import state_union\n",
+        "from nltk.tokenize import PunktSentenceTokenizer"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "V1n75zy7v7Yk",
+        "outputId": "b54e2729-8d47-4afc-c2d7-75867783f7ab"
+      },
+      "source": [
+        "import nltk\n",
+        "nltk.download('state_union')"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "[nltk_data] Downloading package state_union to /root/nltk_data...\n",
+            "[nltk_data]   Unzipping corpora/state_union.zip.\n"
+          ],
+          "name": "stdout"
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "True"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 18
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "odV4lUtwuF9p",
+        "outputId": "ee90be77-37f1-49cc-90fa-20674a96cb8f"
+      },
+      "source": [
+        "train_text = state_union.raw(\"2005-GWBush.txt\")\n",
+        "sample_text = state_union.raw(\"2006-GWBush.txt\")\n",
+        "\n",
+        "custom_sent_tokenizer = PunktSentenceTokenizer(train_text)\n",
+        "tokenized = custom_sent_tokenizer.tokenize(sample_text)\n",
+        "\n",
+        "def process_content():\n",
+        "  try:\n",
+        "    for i in tokenized:\n",
+        "      words = nltk.word_tokenize(i)\n",
+        "      tagged = nltk.pos_tag(words)\n",
+        "      chunkGram = r\"\"\"Chunk: {<RB.?>*<VB.?>*<NNP>+<NN>?}\"\"\"\n",
+        "      chunkParser = nltk.RegexpParser(chunkGram)\n",
+        "      chunked = chunkParser.parse(tagged)\n",
+        "      chunked.draw()\n",
+        "\n",
+        "  except Exception as e:\n",
+        "    print(str(e))\n",
+        "\n",
+        "\n",
+        "\n",
+        "process_content()"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "no display name and no $DISPLAY environment variable\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "999Omq99xFY7"
+      },
+      "source": [
+        "### Named Entity Recognition"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "auTeepSCvs-f",
+        "outputId": "9ef6d77b-9b8a-42cb-f53c-d828d3d74688"
+      },
+      "source": [
+        "import nltk\n",
+        "from nltk.corpus import state_union\n",
+        "from nltk.tokenize import PunktSentenceTokenizer\n",
+        "\n",
+        "import nltk\n",
+        "nltk.download('maxent_ne_chunker')\n",
+        "nltk.download('words')\n",
+        "\n",
+        "train_text = state_union.raw(\"2005-GWBush.txt\")\n",
+        "sample_text = state_union.raw(\"2006-GWBush.txt\")\n",
+        "\n",
+        "custom_sent_tokenizer = PunktSentenceTokenizer(train_text)\n",
+        "tokenized = custom_sent_tokenizer.tokenize(sample_text)\n",
+        "\n",
+        "def process_content():\n",
+        "  try:\n",
+        "    for i in tokenized[5:]:\n",
+        "      words = nltk.word_tokenize(i)\n",
+        "      tagged = nltk.pos_tag(words)\n",
+        "      namedEnt = nltk.ne_chunk(tagged, binary=True)\n",
+        "      namedEnt.draw()\n",
+        "\n",
+        "  except Exception as e:\n",
+        "    print(str(e))\n",
+        "\n",
+        "\n",
+        "\n",
+        "process_content()"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "[nltk_data] Downloading package maxent_ne_chunker to\n",
+            "[nltk_data]     /root/nltk_data...\n",
+            "[nltk_data]   Package maxent_ne_chunker is already up-to-date!\n",
+            "[nltk_data] Downloading package words to /root/nltk_data...\n",
+            "[nltk_data]   Unzipping corpora/words.zip.\n",
+            "no display name and no $DISPLAY environment variable\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    }
+  ]
+}
