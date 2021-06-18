@@ -1,0 +1,97 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "NLP_Worksheet5",
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "NRumdqpdBa-X",
+        "outputId": "485772e5-a617-4ec9-f261-5b88187ab735"
+      },
+      "source": [
+        "import nltk\n",
+        "import random\n",
+        "from nltk.corpus import movie_reviews\n",
+        "\n",
+        "documents = [(list(movie_reviews.words(fileid)), category)\n",
+        "        for category in movie_reviews.categories()\n",
+        "        for fileid in movie_reviews.fileids(category)]\n",
+        "\n",
+        "random.shuffle(documents)\n",
+        "\n",
+        "all_words = []\n",
+        "\n",
+        "for w in movie_reviews.words():\n",
+        "    all_words.append(w.lower())\n",
+        "\n",
+        "all_words = nltk.FreqDist(all_words)\n",
+        "word_features = list(all_words.keys())[:3000]\n",
+        "\n",
+        "\n",
+        "\n",
+        "def find_features(document):\n",
+        "    words = set(document)\n",
+        "    features = {}\n",
+        "    for w in word_features:\n",
+        "        features[w] = (w in words)\n",
+        "    return features\n",
+        "\n",
+        "\n",
+        "#print((a=len(find_features(movie_reviews.words('neg/cv000_29415.txt')))\n",
+        "featuresets = [(find_features(rev), category) for (rev, category) in documents]\n",
+        "\n",
+        "#posterior= prior occurrence X likelihood / evidence\n",
+        "#Set that we'll train our classifier with\n",
+        "training_set = featuresets[:1900]\n",
+        "\n",
+        "#Set that we'll test against.\n",
+        "testing_set = featuresets[1900:]\n",
+        "classifier = nltk.NaiveBayesClassifier.train(training_set)\n",
+        "print(\"Classifier accuracy percent:\",(nltk.classify.accuracy(classifier, testing_set))*100)\n",
+        "classifier.show_most_informative_features(15)"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Classifier accuracy percent: 82.0\n",
+            "Most Informative Features\n",
+            "              schumacher = True              neg : pos    =     12.5 : 1.0\n",
+            "                   sucks = True              neg : pos    =      9.9 : 1.0\n",
+            "                 idiotic = True              neg : pos    =      9.4 : 1.0\n",
+            "                  annual = True              pos : neg    =      8.9 : 1.0\n",
+            "                  welles = True              neg : pos    =      8.4 : 1.0\n",
+            "                 frances = True              pos : neg    =      8.2 : 1.0\n",
+            "             silverstone = True              neg : pos    =      7.7 : 1.0\n",
+            "                  suvari = True              neg : pos    =      7.1 : 1.0\n",
+            "                    mena = True              neg : pos    =      7.1 : 1.0\n",
+            "           unimaginative = True              neg : pos    =      7.1 : 1.0\n",
+            "                  shoddy = True              neg : pos    =      7.1 : 1.0\n",
+            "                  regard = True              pos : neg    =      6.9 : 1.0\n",
+            "                  turkey = True              neg : pos    =      6.6 : 1.0\n",
+            "                   kudos = True              pos : neg    =      6.5 : 1.0\n",
+            "                 kidding = True              neg : pos    =      6.4 : 1.0\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    }
+  ]
+}
