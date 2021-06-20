@@ -1,0 +1,182 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "NLP_Worksheet8",
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "LaTOaPy8-Rra"
+      },
+      "source": [
+        "http://nlp.stanford.edu:8080/ner/"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "Q-6bS6vAJxB2",
+        "outputId": "68804f6d-0ef3-4439-df47-fd122ff324a2"
+      },
+      "source": [
+        "import nltk\n",
+        "nltk.download('punkt')"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "[nltk_data] Downloading package punkt to /root/nltk_data...\n",
+            "[nltk_data]   Unzipping tokenizers/punkt.zip.\n"
+          ],
+          "name": "stdout"
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "True"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 3
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "h340U_ZO-Qju",
+        "outputId": "f540bf8b-f09a-4718-a14c-d3ca561aee0e"
+      },
+      "source": [
+        "from nltk.tag import StanfordNERTagger\n",
+        "from nltk.tokenize import word_tokenize\n",
+        "\n",
+        "st = StanfordNERTagger('/content/english.all.3class.distsim.crf.ser', \n",
+        "                       '/content/stanford-ner.jar', \n",
+        "                        encoding='utf-8')"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "/usr/local/lib/python3.7/dist-packages/nltk/tag/stanford.py:183: DeprecationWarning: \n",
+            "The StanfordTokenizer will be deprecated in version 3.2.5.\n",
+            "Please use \u001b[91mnltk.tag.corenlp.CoreNLPPOSTagger\u001b[0m or \u001b[91mnltk.tag.corenlp.CoreNLPNERTagger\u001b[0m instead.\n",
+            "  super(StanfordNERTagger, self).__init__(*args, **kwargs)\n"
+          ],
+          "name": "stderr"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "agXZQUyeLbqy",
+        "outputId": "680dd881-5da3-46ab-8604-4be8398dc957"
+      },
+      "source": [
+        "text = 'While in France, Christine Lagarde discussed short-term stimulus efforts in a recent interview with the Wall Street Journal.'\n",
+        "\n",
+        "tokenized_text = word_tokenize(text)\n",
+        "classified_text = st.tag(tokenized_text)\n",
+        "\n",
+        "print(classified_text)"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "[('While', 'O'), ('in', 'O'), ('France', 'LOCATION'), (',', 'O'), ('Christine', 'PERSON'), ('Lagarde', 'PERSON'), ('discussed', 'O'), ('short-term', 'O'), ('stimulus', 'O'), ('efforts', 'O'), ('in', 'O'), ('a', 'O'), ('recent', 'O'), ('interview', 'O'), ('with', 'O'), ('the', 'O'), ('Wall', 'ORGANIZATION'), ('Street', 'ORGANIZATION'), ('Journal', 'ORGANIZATION'), ('.', 'O')]\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "XqHMNtKNLf6a",
+        "outputId": "bb68c52d-11aa-4c42-f750-fcbc585b9761"
+      },
+      "source": [
+        "text = 'John is having connectivity issues at Chandigarh University.'\n",
+        "\n",
+        "tokenized_text = word_tokenize(text)\n",
+        "classified_text = st.tag(tokenized_text)\n",
+        "\n",
+        "print(classified_text)"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "[('John', 'PERSON'), ('is', 'O'), ('having', 'O'), ('connectivity', 'O'), ('issues', 'O'), ('at', 'O'), ('Chandigarh', 'ORGANIZATION'), ('University', 'ORGANIZATION'), ('.', 'O')]\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "n9oYi3J6LoZF",
+        "outputId": "c71cb781-aeea-4cbf-fceb-8c6217800df3"
+      },
+      "source": [
+        "text = '''Hi! AIML1-B. CU is an Educational University.\n",
+        "Take care of yourself. \n",
+        "I borrowed 30 cents,and its 30 percent of the whole money. Today is 29 of April, 2021. I am Monika. meet me at 3:30 PM.I am from Delhi.'''\n",
+        "\n",
+        "tokenized_text = word_tokenize(text)\n",
+        "classified_text = st.tag(tokenized_text)\n",
+        "\n",
+        "print(classified_text)"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "[('Hi', 'O'), ('!', 'O'), ('AIML1-B', 'O'), ('.', 'O'), ('CU', 'ORGANIZATION'), ('is', 'O'), ('an', 'O'), ('Educational', 'ORGANIZATION'), ('University', 'ORGANIZATION'), ('.', 'O'), ('Take', 'O'), ('care', 'O'), ('of', 'O'), ('yourself', 'O'), ('.', 'O'), ('I', 'O'), ('borrowed', 'O'), ('30', 'O'), ('cents', 'O'), (',', 'O'), ('and', 'O'), ('its', 'O'), ('30', 'O'), ('percent', 'O'), ('of', 'O'), ('the', 'O'), ('whole', 'O'), ('money', 'O'), ('.', 'O'), ('Today', 'O'), ('is', 'O'), ('29', 'O'), ('of', 'O'), ('April', 'O'), (',', 'O'), ('2021', 'O'), ('.', 'O'), ('I', 'O'), ('am', 'O'), ('Monika', 'PERSON'), ('.', 'O'), ('meet', 'O'), ('me', 'O'), ('at', 'O'), ('3:30', 'O'), ('PM.I', 'O'), ('am', 'O'), ('from', 'O'), ('Delhi', 'LOCATION'), ('.', 'O')]\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    }
+  ]
+}
