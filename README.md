@@ -7,4 +7,4 @@
 5. Classifying Movie DataSet text in Positives and Negatives
 6. Plot on basis of Twitter Data Analysis
 7. Name Entity Recognition using Stanford Tagger 
-8. Accuracy by Classifier
+8. Accuracy by Classifier for Stanford NER Classifier vs NLTK NER Classifier
