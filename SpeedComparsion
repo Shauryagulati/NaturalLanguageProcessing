@@ -1,0 +1,567 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "NLP_Worksheet10",
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "b32lg6xyjRnn"
+      },
+      "source": [
+        "#Shaurya Gulati\n",
+        "##18BCS6092"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "I3ZVwytxT3Yw",
+        "outputId": "980e1d45-4448-401a-a035-9595b81f1ea7"
+      },
+      "source": [
+        "import nltk\n",
+        "nltk.download('punkt')"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "[nltk_data] Downloading package punkt to /root/nltk_data...\n",
+            "[nltk_data]   Unzipping tokenizers/punkt.zip.\n"
+          ],
+          "name": "stdout"
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "True"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 4
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "vrd7PpyaT8rc",
+        "outputId": "2a1e6d5a-a637-42ef-e0fe-40bdb663a1de"
+      },
+      "source": [
+        "import nltk\n",
+        "nltk.download('averaged_perceptron_tagger')"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "[nltk_data] Downloading package averaged_perceptron_tagger to\n",
+            "[nltk_data]     /root/nltk_data...\n",
+            "[nltk_data]   Unzipping taggers/averaged_perceptron_tagger.zip.\n"
+          ],
+          "name": "stdout"
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "True"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 6
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "wmg-_cdlUGYS",
+        "outputId": "a882babd-bec2-42f7-e1a0-f97450f3d504"
+      },
+      "source": [
+        "import nltk\n",
+        "nltk.download('maxent_ne_chunker')"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "[nltk_data] Downloading package maxent_ne_chunker to\n",
+            "[nltk_data]     /root/nltk_data...\n",
+            "[nltk_data]   Unzipping chunkers/maxent_ne_chunker.zip.\n"
+          ],
+          "name": "stdout"
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "True"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 8
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "vAu9qNmhUOwk",
+        "outputId": "c8f5744e-33a8-4d12-fe56-c7842b658f4d"
+      },
+      "source": [
+        "import nltk\n",
+        "nltk.download('words')"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "[nltk_data] Downloading package words to /root/nltk_data...\n",
+            "[nltk_data]   Unzipping corpora/words.zip.\n"
+          ],
+          "name": "stdout"
+        },
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "True"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 12
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "R6qVDy0JQNRs"
+      },
+      "source": [
+        "import nltk\n",
+        "import os\n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "from matplotlib import style\n",
+        "from nltk import pos_tag\n",
+        "from nltk.tag import StanfordNERTagger\n",
+        "from nltk.tokenize import word_tokenize\n",
+        "\n",
+        "\n",
+        "\n",
+        "style.use('fivethirtyeight')\n",
+        "\n",
+        "\n",
+        "\n",
+        "# Process text \n",
+        "def process_text(txt_file):\n",
+        " raw_text = open('/content/news_article.txt').read()\n",
+        " token_text = word_tokenize(raw_text)\n",
+        " return token_text\n",
+        "\n",
+        "\n",
+        "# Stanford NER tagger \n",
+        "def stanford_tagger(token_text):\n",
+        " st = StanfordNERTagger('/content/drive/MyDrive/NER Tagger/english.all.3class.distsim.crf.ser',\n",
+        " '/content/drive/MyDrive/NER Tagger/stanford-ner.jar',\n",
+        " encoding='utf-8') \n",
+        " ne_tagged = st.tag(token_text)\n",
+        " return(ne_tagged)\n",
+        "\n",
+        " \n",
+        "\n",
+        "# NLTK POS and NER taggers \n",
+        "def nltk_tagger(token_text):\n",
+        " tagged_words = nltk.pos_tag(token_text)\n",
+        " ne_tagged = nltk.ne_chunk(tagged_words)\n",
+        " return(ne_tagged)\n",
+        "\n",
+        "# function\n",
+        "def stanford_main():\n",
+        " print(stanford_tagger(process_text('/content/news_article.txt')))\n",
+        "\n",
+        "def nltk_main():\n",
+        " print(nltk_tagger(process_text('/content/news_article.txt')))\n",
+        "\n",
+        "\n",
+        "#Plot\n",
+        "\n",
+        "def time_plot(stanford_total_time, nltk_total_time):\n",
+        " N = 1\n",
+        " ind = np.arange(N) # the x locations for the groups\n",
+        " width = 0.35 # the width of the bars\n",
+        " stanford_total_time = stanford_total_time\n",
+        " nltk_total_time = nltk_total_time \n",
+        " fig, ax = plt.subplots() \n",
+        " rects1 = ax.bar(ind, stanford_total_time, width, color='black') \n",
+        " rects2 = ax.bar(ind+width, nltk_total_time, width, color='y')\n",
+        "\n",
+        "\n",
+        " # Add text for labels, title and axes ticks\n",
+        " ax.set_xlabel('Classifier')\n",
+        " ax.set_ylabel('Time (in seconds)')\n",
+        " ax.set_title('Speed by NER Classifier')\n",
+        " ax.set_xticks(ind+width)\n",
+        " ax.set_xticklabels( ('') ) \n",
+        " ax.legend( (rects1[0], rects2[0]), ('Stanford', 'NLTK'), bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0. )\n",
+        " def autolabel(rects):\n",
+        "\n",
+        " # attach some text labels\n",
+        "\n",
+        "  for rect in rects:\n",
+        "    height = rect.get_height()\n",
+        "    ax.text(rect.get_x()+rect.get_width()/2., 1.02*height, '%10.2f' % float(height),\n",
+        "    ha='center', va='bottom')\n",
+        "    autolabel(rects1)\n",
+        "    autolabel(rects2) \n",
+        "\n",
+        " plt.show()"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 1000
+        },
+        "id": "uSbzQ5sVT5Ne",
+        "outputId": "9e322d14-37f5-4f57-8906-4ba118c1e318"
+      },
+      "source": [
+        "#Graph Results\n",
+        "\n",
+        "if __name__ == '__main__':\n",
+        " stanford_t0 = os.times()[4]\n",
+        " stanford_main()\n",
+        " stanford_t1 = os.times()[4]\n",
+        " stanford_total_time = stanford_t1 - stanford_t0\n",
+        " nltk_t0 = os.times()[4]\n",
+        " nltk_main()\n",
+        " nltk_t1 = os.times()[4]\n",
+        " nltk_total_time = nltk_t1 - nltk_t0\n",
+        " time_plot(stanford_total_time, nltk_total_time)"
+      ],
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "/usr/local/lib/python3.7/dist-packages/nltk/tag/stanford.py:183: DeprecationWarning: \n",
+            "The StanfordTokenizer will be deprecated in version 3.2.5.\n",
+            "Please use \u001b[91mnltk.tag.corenlp.CoreNLPPOSTagger\u001b[0m or \u001b[91mnltk.tag.corenlp.CoreNLPNERTagger\u001b[0m instead.\n",
+            "  super(StanfordNERTagger, self).__init__(*args, **kwargs)\n"
+          ],
+          "name": "stderr"
+        },
+        {
+          "output_type": "stream",
+          "text": [
+            "[('House', 'ORGANIZATION'), ('Speaker', 'O'), ('John', 'PERSON'), ('Boehner', 'PERSON'), ('became', 'O'), ('animated', 'O'), ('Tuesday', 'O'), ('over', 'O'), ('the', 'O'), ('proposed', 'O'), ('Keystone', 'ORGANIZATION'), ('Pipeline', 'ORGANIZATION'), (',', 'O'), ('castigating', 'O'), ('the', 'O'), ('Obama', 'PERSON'), ('administration', 'O'), ('for', 'O'), ('not', 'O'), ('having', 'O'), ('approved', 'O'), ('the', 'O'), ('project', 'O'), ('yet', 'O'), ('.', 'O'), ('Republican', 'ORGANIZATION'), ('House', 'ORGANIZATION'), ('Speaker', 'O'), ('John', 'PERSON'), ('Boehner', 'PERSON'), ('says', 'O'), ('there', 'O'), (\"'s\", 'O'), ('``', 'O'), ('nothing', 'O'), ('complex', 'O'), ('about', 'O'), ('the', 'O'), ('Keystone', 'O'), ('Pipeline', 'O'), (',', 'O'), (\"''\", 'O'), ('and', 'O'), ('that', 'O'), ('it', 'O'), (\"'s\", 'O'), ('time', 'O'), ('to', 'O'), ('build', 'O'), ('it', 'O'), ('.', 'O'), ('``', 'O'), ('Complex', 'O'), ('?', 'O'), ('You', 'O'), ('think', 'O'), ('the', 'O'), ('Keystone', 'ORGANIZATION'), ('Pipeline', 'ORGANIZATION'), ('is', 'O'), ('complex', 'O'), ('?', 'O'), ('!', 'O'), (\"''\", 'O'), ('Boehner', 'PERSON'), ('responded', 'O'), ('to', 'O'), ('a', 'O'), ('questioner', 'O'), ('.', 'O'), ('``', 'O'), ('It', 'O'), (\"'s\", 'O'), ('been', 'O'), ('under', 'O'), ('study', 'O'), ('for', 'O'), ('five', 'O'), ('years', 'O'), ('!', 'O'), ('We', 'O'), ('build', 'O'), ('pipelines', 'O'), ('in', 'O'), ('America', 'LOCATION'), ('every', 'O'), ('day', 'O'), ('.', 'O'), ('Do', 'O'), ('you', 'O'), ('realize', 'O'), ('there', 'O'), ('are', 'O'), ('200,000', 'O'), ('miles', 'O'), ('of', 'O'), ('pipelines', 'O'), ('in', 'O'), ('the', 'O'), ('United', 'LOCATION'), ('States', 'LOCATION'), ('?', 'O'), (\"''\", 'O'), ('The', 'O'), ('speaker', 'O'), ('went', 'O'), ('on', 'O'), (':', 'O'), ('``', 'O'), ('And', 'O'), ('the', 'O'), ('only', 'O'), ('reason', 'O'), ('the', 'O'), ('president', 'O'), (\"'s\", 'O'), ('involved', 'O'), ('in', 'O'), ('the', 'O'), ('Keystone', 'ORGANIZATION'), ('Pipeline', 'ORGANIZATION'), ('is', 'O'), ('because', 'O'), ('it', 'O'), ('crosses', 'O'), ('an', 'O'), ('international', 'O'), ('boundary', 'O'), ('.', 'O'), ('Listen', 'O'), (',', 'O'), ('we', 'O'), ('can', 'O'), ('build', 'O'), ('it', 'O'), ('.', 'O'), ('There', 'O'), (\"'s\", 'O'), ('nothing', 'O'), ('complex', 'O'), ('about', 'O'), ('the', 'O'), ('Keystone', 'O'), ('Pipeline', 'O'), ('--', 'O'), ('it', 'O'), (\"'s\", 'O'), ('time', 'O'), ('to', 'O'), ('build', 'O'), ('it', 'O'), ('.', 'O'), (\"''\", 'O'), ('Boehner', 'PERSON'), ('said', 'O'), ('the', 'O'), ('president', 'O'), ('had', 'O'), ('no', 'O'), ('excuse', 'O'), ('at', 'O'), ('this', 'O'), ('point', 'O'), ('to', 'O'), ('not', 'O'), ('give', 'O'), ('the', 'O'), ('pipeline', 'O'), ('the', 'O'), ('go-ahead', 'O'), ('after', 'O'), ('the', 'O'), ('State', 'ORGANIZATION'), ('Department', 'ORGANIZATION'), ('released', 'O'), ('a', 'O'), ('report', 'O'), ('on', 'O'), ('Friday', 'O'), ('indicating', 'O'), ('the', 'O'), ('project', 'O'), ('would', 'O'), ('have', 'O'), ('a', 'O'), ('minimal', 'O'), ('impact', 'O'), ('on', 'O'), ('the', 'O'), ('environment', 'O'), ('.', 'O'), ('Republicans', 'O'), ('have', 'O'), ('long', 'O'), ('pushed', 'O'), ('for', 'O'), ('construction', 'O'), ('of', 'O'), ('the', 'O'), ('project', 'O'), (',', 'O'), ('which', 'O'), ('enjoys', 'O'), ('some', 'O'), ('measure', 'O'), ('of', 'O'), ('Democratic', 'O'), ('support', 'O'), ('as', 'O'), ('well', 'O'), ('.', 'O'), ('The', 'O'), ('GOP', 'ORGANIZATION'), ('is', 'O'), ('considering', 'O'), ('conditioning', 'O'), ('an', 'O'), ('extension', 'O'), ('of', 'O'), ('the', 'O'), ('debt', 'O'), ('limit', 'O'), ('on', 'O'), ('approval', 'O'), ('of', 'O'), ('the', 'O'), ('project', 'O'), ('by', 'O'), ('Obama', 'PERSON'), ('.', 'O'), ('The', 'O'), ('White', 'ORGANIZATION'), ('House', 'ORGANIZATION'), (',', 'O'), ('though', 'O'), (',', 'O'), ('has', 'O'), ('said', 'O'), ('that', 'O'), ('it', 'O'), ('has', 'O'), ('no', 'O'), ('timetable', 'O'), ('for', 'O'), ('a', 'O'), ('final', 'O'), ('decision', 'O'), ('on', 'O'), ('the', 'O'), ('project', 'O'), ('.', 'O')]\n",
+            "(S\n",
+            "  (ORGANIZATION House/NNP)\n",
+            "  Speaker/NNP\n",
+            "  (PERSON John/NNP Boehner/NNP)\n",
+            "  became/VBD\n",
+            "  animated/JJ\n",
+            "  Tuesday/NNP\n",
+            "  over/IN\n",
+            "  the/DT\n",
+            "  proposed/VBN\n",
+            "  (PERSON Keystone/NNP Pipeline/NNP)\n",
+            "  ,/,\n",
+            "  castigating/VBG\n",
+            "  the/DT\n",
+            "  (ORGANIZATION Obama/NNP)\n",
+            "  administration/NN\n",
+            "  for/IN\n",
+            "  not/RB\n",
+            "  having/VBG\n",
+            "  approved/VBN\n",
+            "  the/DT\n",
+            "  project/NN\n",
+            "  yet/RB\n",
+            "  ./.\n",
+            "  (ORGANIZATION Republican/JJ)\n",
+            "  (ORGANIZATION House/NNP)\n",
+            "  Speaker/NNP\n",
+            "  (PERSON John/NNP Boehner/NNP)\n",
+            "  says/VBZ\n",
+            "  there/EX\n",
+            "  's/VBZ\n",
+            "  ``/``\n",
+            "  nothing/NN\n",
+            "  complex/JJ\n",
+            "  about/IN\n",
+            "  the/DT\n",
+            "  (ORGANIZATION Keystone/NNP Pipeline/NNP)\n",
+            "  ,/,\n",
+            "  ''/''\n",
+            "  and/CC\n",
+            "  that/IN\n",
+            "  it/PRP\n",
+            "  's/VBZ\n",
+            "  time/NN\n",
+            "  to/TO\n",
+            "  build/VB\n",
+            "  it/PRP\n",
+            "  ./.\n",
+            "  ``/``\n",
+            "  Complex/NNP\n",
+            "  ?/.\n",
+            "  You/PRP\n",
+            "  think/VBP\n",
+            "  the/DT\n",
+            "  (ORGANIZATION Keystone/NNP Pipeline/NNP)\n",
+            "  is/VBZ\n",
+            "  complex/JJ\n",
+            "  ?/.\n",
+            "  !/.\n",
+            "  ''/''\n",
+            "  (PERSON Boehner/NNP)\n",
+            "  responded/VBD\n",
+            "  to/TO\n",
+            "  a/DT\n",
+            "  questioner/NN\n",
+            "  ./.\n",
+            "  ``/``\n",
+            "  It/PRP\n",
+            "  's/VBZ\n",
+            "  been/VBN\n",
+            "  under/IN\n",
+            "  study/NN\n",
+            "  for/IN\n",
+            "  five/CD\n",
+            "  years/NNS\n",
+            "  !/.\n",
+            "  We/PRP\n",
+            "  build/VBP\n",
+            "  pipelines/NNS\n",
+            "  in/IN\n",
+            "  (GPE America/NNP)\n",
+            "  every/DT\n",
+            "  day/NN\n",
+            "  ./.\n",
+            "  Do/VB\n",
+            "  you/PRP\n",
+            "  realize/VB\n",
+            "  there/EX\n",
+            "  are/VBP\n",
+            "  200,000/CD\n",
+            "  miles/NNS\n",
+            "  of/IN\n",
+            "  pipelines/NNS\n",
+            "  in/IN\n",
+            "  the/DT\n",
+            "  (GPE United/NNP States/NNPS)\n",
+            "  ?/.\n",
+            "  ''/''\n",
+            "  The/DT\n",
+            "  speaker/NN\n",
+            "  went/VBD\n",
+            "  on/IN\n",
+            "  :/:\n",
+            "  ``/``\n",
+            "  And/CC\n",
+            "  the/DT\n",
+            "  only/JJ\n",
+            "  reason/NN\n",
+            "  the/DT\n",
+            "  president/NN\n",
+            "  's/POS\n",
+            "  involved/VBN\n",
+            "  in/IN\n",
+            "  the/DT\n",
+            "  (ORGANIZATION Keystone/NNP Pipeline/NNP)\n",
+            "  is/VBZ\n",
+            "  because/IN\n",
+            "  it/PRP\n",
+            "  crosses/VBZ\n",
+            "  an/DT\n",
+            "  international/JJ\n",
+            "  boundary/NN\n",
+            "  ./.\n",
+            "  (PERSON Listen/NNP)\n",
+            "  ,/,\n",
+            "  we/PRP\n",
+            "  can/MD\n",
+            "  build/VB\n",
+            "  it/PRP\n",
+            "  ./.\n",
+            "  There/EX\n",
+            "  's/VBZ\n",
+            "  nothing/NN\n",
+            "  complex/JJ\n",
+            "  about/IN\n",
+            "  the/DT\n",
+            "  (ORGANIZATION Keystone/NNP)\n",
+            "  Pipeline/NNP\n",
+            "  --/:\n",
+            "  it/PRP\n",
+            "  's/VBZ\n",
+            "  time/NN\n",
+            "  to/TO\n",
+            "  build/VB\n",
+            "  it/PRP\n",
+            "  ./.\n",
+            "  ''/''\n",
+            "  (PERSON Boehner/NNP)\n",
+            "  said/VBD\n",
+            "  the/DT\n",
+            "  president/NN\n",
+            "  had/VBD\n",
+            "  no/DT\n",
+            "  excuse/NN\n",
+            "  at/IN\n",
+            "  this/DT\n",
+            "  point/NN\n",
+            "  to/TO\n",
+            "  not/RB\n",
+            "  give/VB\n",
+            "  the/DT\n",
+            "  pipeline/NN\n",
+            "  the/DT\n",
+            "  go-ahead/NN\n",
+            "  after/IN\n",
+            "  the/DT\n",
+            "  (ORGANIZATION State/NNP Department/NNP)\n",
+            "  released/VBD\n",
+            "  a/DT\n",
+            "  report/NN\n",
+            "  on/IN\n",
+            "  Friday/NNP\n",
+            "  indicating/VBG\n",
+            "  the/DT\n",
+            "  project/NN\n",
+            "  would/MD\n",
+            "  have/VB\n",
+            "  a/DT\n",
+            "  minimal/JJ\n",
+            "  impact/NN\n",
+            "  on/IN\n",
+            "  the/DT\n",
+            "  environment/NN\n",
+            "  ./.\n",
+            "  Republicans/NNPS\n",
+            "  have/VBP\n",
+            "  long/RB\n",
+            "  pushed/VBN\n",
+            "  for/IN\n",
+            "  construction/NN\n",
+            "  of/IN\n",
+            "  the/DT\n",
+            "  project/NN\n",
+            "  ,/,\n",
+            "  which/WDT\n",
+            "  enjoys/VBZ\n",
+            "  some/DT\n",
+            "  measure/NN\n",
+            "  of/IN\n",
+            "  (ORGANIZATION Democratic/JJ)\n",
+            "  support/NN\n",
+            "  as/RB\n",
+            "  well/RB\n",
+            "  ./.\n",
+            "  The/DT\n",
+            "  (ORGANIZATION GOP/NNP)\n",
+            "  is/VBZ\n",
+            "  considering/VBG\n",
+            "  conditioning/VBG\n",
+            "  an/DT\n",
+            "  extension/NN\n",
+            "  of/IN\n",
+            "  the/DT\n",
+            "  debt/NN\n",
+            "  limit/NN\n",
+            "  on/IN\n",
+            "  approval/NN\n",
+            "  of/IN\n",
+            "  the/DT\n",
+            "  project/NN\n",
+            "  by/IN\n",
+            "  (PERSON Obama/NNP)\n",
+            "  ./.\n",
+            "  The/DT\n",
+            "  (FACILITY White/NNP House/NNP)\n",
+            "  ,/,\n",
+            "  though/RB\n",
+            "  ,/,\n",
+            "  has/VBZ\n",
+            "  said/VBD\n",
+            "  that/IN\n",
+            "  it/PRP\n",
+            "  has/VBZ\n",
+            "  no/DT\n",
+            "  timetable/NN\n",
+            "  for/IN\n",
+            "  a/DT\n",
+            "  final/JJ\n",
+            "  decision/NN\n",
+            "  on/IN\n",
+            "  the/DT\n",
+            "  project/NN\n",
+            "  ./.)\n"
+          ],
+          "name": "stdout"
+        },
+        {
+          "output_type": "display_data",
+          "data": {
+            "image/png": "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\n",
+            "text/plain": [
+              "<Figure size 432x288 with 1 Axes>"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          }
+        }
+      ]
+    }
+  ]
+}
