@@ -8,3 +8,4 @@
 6. Plot on basis of Twitter Data Analysis
 7. Name Entity Recognition using Stanford Tagger 
 8. Accuracy Standards for Stanford NER Classifier vs NLTK NER Classifier
+9. Speed Standards for Stanford NER Classifier vs NLTK NER Classifier
