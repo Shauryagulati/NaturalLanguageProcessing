@@ -9,3 +9,4 @@
 7. Name Entity Recognition using Stanford Tagger 
 8. Accuracy Standards for Stanford NER Classifier vs NLTK NER Classifier
 9. Speed Standards for Stanford NER Classifier vs NLTK NER Classifier
+10. Accuracy Measure of Stanford NER Classifier Class-3 vs Class-4 
